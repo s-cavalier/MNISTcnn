@@ -66,10 +66,6 @@ public:
     // Optimizations could be made by optimizing root function
     static Eigen::MatrixXd max_pool2d(const Eigen::MatrixXd& m, const int& size, const int& stride, mstorage* maxes = nullptr);
 
-    // Returns a umap of the locations of all "local maxes"
-    // Used for backpropagation
-    static Eigen::MatrixXd BPmax_pool2d(const Eigen::MatrixXd& m, const int& size, const int& stride);
-
     //Convolutional weights
     std::vector<CMatrixd> kernels;
     //Convolutional biases

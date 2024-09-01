@@ -106,8 +106,6 @@ long double cNetwork::large_root_of_two(long double x) {
 
 Eigen::MatrixXd cNetwork::max_pool2d(const Eigen::MatrixXd& m, const int& size, const int& stride, mstorage* maxes) {
     
-    Eigen::MatrixXd cNetwork::max_pool2d(const Eigen::MatrixXd& m, const int& size, const int& stride, mstorage* maxes) {
-    
     // i represents the current "y" position of the upper row
     // j represents the current "x" position of the left column of the box about to be lost
     // k represents the current "x" position of the left column about to be gained
@@ -157,7 +155,7 @@ Eigen::MatrixXd cNetwork::max_pool2d(const Eigen::MatrixXd& m, const int& size, 
             double new_max = large_root_of_two(sum);
             int ox = i / stride;
             int oy = j / stride + 1;
-            out(i / stride, j / stride + 1) = new_max;
+            out(ox, oy) = new_max;
             if (maxes) (*maxes)[new_max] = { ox, oy };
 
         }
@@ -165,7 +163,7 @@ Eigen::MatrixXd cNetwork::max_pool2d(const Eigen::MatrixXd& m, const int& size, 
 
     return out;    
     
-}
+
     
 }
 

@@ -13,6 +13,7 @@ CMatrixd::CMatrixd() {
     t_size = 0;
 }
 
+// Better off with one giant concat matrix instead of a 2d arr of matrices, optimization soon
 CMatrixd::CMatrixd(const int &i, const int& j) {
     mat.resize( i, std::vector<Eigen::MatrixXd>(j) );
     r_size = i;
