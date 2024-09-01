@@ -106,8 +106,66 @@ long double cNetwork::large_root_of_two(long double x) {
 
 Eigen::MatrixXd cNetwork::max_pool2d(const Eigen::MatrixXd& m, const int& size, const int& stride, mstorage* maxes) {
     
-    // Max pool function requires implementation, my current algorithim is O(1) space and O(nm) time
-    // However, not open source yet
+    Eigen::MatrixXd cNetwork::max_pool2d(const Eigen::MatrixXd& m, const int& size, const int& stride, mstorage* maxes) {
+    
+    // i represents the current "y" position of the upper row
+    // j represents the current "x" position of the left column of the box about to be lost
+    // k represents the current "x" position of the left column about to be gained
+    /*
+            lost curr gain
+            ____________
+        i : j  |    k  |
+     size | |__|____|__|
+    
+    */
+   
+
+    int new_size = (m.rows() - size) / stride + 1;
+    Eigen::MatrixXd out = Eigen::MatrixXd::Zero(new_size, new_size);
+    for (int i = 0; i + size <= m.rows(); i += stride) {
+
+        long double sum = 0;
+        double max = 0;
+
+        // Initialize "sliding window"
+        for (int j = i; j < i + size; j++) {
+            for (int k = 0; k < size; k++) {
+                sum += large_power_of_two(m(j, k));
+                if (m(j, k) <= max) continue;
+                max = m(j, k);
+            }
+        }
+        out(i / stride, 0) = max;
+
+        // Start moving window
+        for (int j = 0, k = size; k + stride <= m.cols(); j += stride, k += stride) {
+
+
+            // Box of lost stuff
+            for (int l = i; l < i + size; l++) {
+                for (int x = j; x < j + stride; x++) sum -= large_power_of_two(m(l, x));
+            }
+
+            // Account for floating point arithmetic errors (can blow up quickly)
+            sum = std::max(sum, 0.0l);
+
+            // Box of new stuff
+            for (int l = i; l < i + size; l++) {
+                for (int x = k; x < k + stride; x++) sum += large_power_of_two(m(l, x));
+            }
+
+            double new_max = large_root_of_two(sum);
+            int ox = i / stride;
+            int oy = j / stride + 1;
+            out(i / stride, j / stride + 1) = new_max;
+            if (maxes) (*maxes)[new_max] = { ox, oy };
+
+        }
+    }
+
+    return out;    
+    
+}
     
 }
 
